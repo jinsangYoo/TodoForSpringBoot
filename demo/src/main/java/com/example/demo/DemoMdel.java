@@ -8,6 +8,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class DemoMdel {
 
-	@NonNull
-	private String id;
+  @NonNull
+  private String id;
 }
