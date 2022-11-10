@@ -22,9 +22,9 @@ public class TestController {
     List<String> list = new ArrayList<>();
     list.add("음.....");
     ResponseDTO<String> res = ResponseDTO.<String>builder().data(list).build();
-    return ResponseEntity.ok().body(res); 
+    return ResponseEntity.ok().body(res);
   }
-  
+
   @GetMapping
   public String testController() {
     // TODO Auto-generated method stub
@@ -37,17 +37,20 @@ public class TestController {
   }
 
   @GetMapping("/{id}")
-  public String testControllerWithPathVariables(@PathVariable(required = false) int id) {
+  public String testControllerWithPathVariables(
+      @PathVariable(required = false) int id) {
     return "Hello World! ID " + id;
   }
 
   @GetMapping("/testRequestParam")
-  public String testControllerRequestParam(@RequestParam(required = false) int id) {
+  public String testControllerRequestParam(
+      @RequestParam(required = false) int id) {
     return "Hello World! ID " + id;
   }
 
   @GetMapping("/testRequestBody")
-  public String testControllerRequestBody(@RequestBody TestRequestBodyDTO testRequestBodyDTO) {
+  public String testControllerRequestBody(
+      @RequestBody TestRequestBodyDTO testRequestBodyDTO) {
     return "Hello World! ID " + testRequestBodyDTO.getId() + " Message: "
         + testRequestBodyDTO.getMessage();
   }
@@ -56,7 +59,8 @@ public class TestController {
   public ResponseDTO<String> testControllerResponseBody() {
     List<String> list = new ArrayList<>();
     list.add("Hello World! I'm ResponseDTO");
-    ResponseDTO<String> response = ResponseDTO.<String>builder().data(list).build();
+    ResponseDTO<String> response = ResponseDTO.<String>builder().data(list)
+        .build();
     return response;
   }
 
@@ -64,7 +68,8 @@ public class TestController {
   public ResponseEntity<?> testControllerResponseEntity() {
     List<String> list = new ArrayList<>();
     list.add("Hello World! I'm ResponseEntity. And you got 400!");
-    ResponseDTO<String> response = ResponseDTO.<String>builder().data(list).build();
+    ResponseDTO<String> response = ResponseDTO.<String>builder().data(list)
+        .build();
     return ResponseEntity.badRequest().body(response);
   }
 }
