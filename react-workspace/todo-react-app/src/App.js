@@ -6,18 +6,7 @@ import { Container, List, Paper } from '@mui/material'
 import AddTodo from './AddTodo'
 
 function App() {
-  const [items, setItems] = useState([
-    {
-      id: '0',
-      title: 'Hello World 1',
-      done: true,
-    },
-    {
-      id: '1',
-      title: 'Hello World 2',
-      done: false,
-    },
-  ])
+  const [items, setItems] = useState([])
 
   const addItem = (item) => {
     item.id = 'ID-' + items.length
