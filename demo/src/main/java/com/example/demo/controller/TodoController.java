@@ -52,11 +52,13 @@ public class TodoController {
   @GetMapping
   public ResponseEntity<?> retrieveTodoList() {
     List<TodoEntity> entities = service.retrieve();
-    List<TodoDTO> dtos = entities.stream().map(TodoDTO::new).collect(Collectors.toList());
-    ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().data(dtos).build();
+    List<TodoDTO> dtos = entities.stream().map(TodoDTO::new)
+        .collect(Collectors.toList());
+    ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().data(dtos)
+        .build();
     return ResponseEntity.ok().body(response);
   }
-  
+
   @PutMapping
   public ResponseEntity<?> updateTodo(@RequestBody TodoDTO dto) {
     try {
@@ -78,7 +80,7 @@ public class TodoController {
       return ResponseEntity.badRequest().body(response);
     }
   }
-  
+
   @DeleteMapping
   public ResponseEntity<?> deleteTodo(@RequestBody TodoDTO dto) {
     try {
@@ -100,7 +102,7 @@ public class TodoController {
       return ResponseEntity.badRequest().body(response);
     }
   }
-  
+
   @GetMapping("/test")
   public ResponseEntity<?> testTodo() {
     String str = service.testService();

@@ -1,25 +1,26 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import logo from './logo.svg'
 import './App.css'
 import Todo from './Todo'
 import { Container, List, Paper } from '@mui/material'
 import AddTodo from './AddTodo'
+import { call } from './service/ApiService'
 
 function App() {
   const [items, setItems] = useState([])
 
+  useEffect(() => {
+    call('/todo', 'GET').then((response) => setItems(response.data))
+  }, [])
+
   const addItem = (item) => {
-    item.id = 'ID-' + items.length
-    item.done = false
-    setItems([...items, item])
-    console.log('items: ', items)
+    call('/todo', 'POST', item).then((response) => setItems(response.data))
   }
   const deleteItem = (item) => {
-    const newItems = items.filter((e) => e.id !== item.id)
-    setItems(newItems)
+    call('/todo', 'DELETE', item).then((response) => setItems(response.data))
   }
-  const editItem = () => {
-    setItems([...items])
+  const editItem = (item) => {
+    call('/todo', 'PUT', item).then((response) => setItems(response.data))
   }
 
   let todoItems = items.length > 0 && (
