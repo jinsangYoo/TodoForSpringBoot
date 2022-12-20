@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.model.UserEntity;
@@ -30,7 +31,14 @@ public class UserService {
   }
 
   public UserEntity getByCredentials(final String username,
-      final String password) {
-    return userRepository.findByUsernameAndPassword(username, password);
+      final String password, final PasswordEncoder encoder) {
+    final UserEntity originalUser = userRepository.findByUsername(username);
+
+    if (originalUser != null
+        && encoder.matches(password, originalUser.getPassword())) {
+      return originalUser;
+    }
+
+    return null;
   }
 }

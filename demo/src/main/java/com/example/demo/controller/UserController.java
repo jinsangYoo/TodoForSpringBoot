@@ -2,6 +2,8 @@ package com.example.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,9 +23,11 @@ import lombok.extern.slf4j.Slf4j;
 public class UserController {
   @Autowired
   private UserService userSerivce;
-  
+
   @Autowired
   private TokenProvider tokenProvider;
+
+  private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
   @PostMapping("/signup")
   public ResponseEntity<?> registerUser(@RequestBody UserDTO userDTO) {
@@ -33,7 +37,7 @@ public class UserController {
       }
       UserEntity user = UserEntity.builder()
           .username(userDTO.getUsername())
-          .password(userDTO.getPassword())
+          .password(passwordEncoder.encode(userDTO.getPassword()))
           .build();
       UserEntity registerUser = userSerivce.create(user);
       UserDTO responseUserDTO = UserDTO.builder()
@@ -53,7 +57,7 @@ public class UserController {
   @PostMapping("/signin")
   public ResponseEntity<?> authenticate(@RequestBody UserDTO userDTO) {
     UserEntity user = userSerivce.getByCredentials(userDTO.getUsername(),
-        userDTO.getPassword());
+        userDTO.getPassword(), passwordEncoder);
 
     if (user != null) {
       final String token = tokenProvider.create(user);
