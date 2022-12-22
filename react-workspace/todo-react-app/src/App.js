@@ -2,15 +2,28 @@ import React, { useEffect, useState } from 'react'
 import logo from './logo.svg'
 import './App.css'
 import Todo from './Todo'
-import { Container, List, Paper } from '@mui/material'
+import {
+  Container,
+  List,
+  Paper,
+  AppBar,
+  Toolbar,
+  Grid,
+  Typography,
+  Button,
+} from '@mui/material'
 import AddTodo from './AddTodo'
-import { call } from './service/ApiService'
+import { call, signout } from './service/ApiService'
 
 function App() {
   const [items, setItems] = useState([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    call('/todo', 'GET').then((response) => setItems(response.data))
+    call('/todo', 'GET').then((response) => {
+      setItems(response.data)
+      setLoading(false)
+    })
   }, [])
 
   const addItem = (item) => {
@@ -22,7 +35,6 @@ function App() {
   const editItem = (item) => {
     call('/todo', 'PUT', item).then((response) => setItems(response.data))
   }
-
   let todoItems = items.length > 0 && (
     <Paper style={{ margin: 16 }}>
       <List>
@@ -37,14 +49,38 @@ function App() {
       </List>
     </Paper>
   )
-  return (
-    <div className='App'>
+  let navigationBar = (
+    <AppBar position='static'>
+      <Toolbar>
+        <Grid justifyContent='space-between' container>
+          <Grid item>
+            <Typography variant='h6'>오늘의 할일</Typography>
+          </Grid>
+          <Grid item>
+            <Button color='inherit' onClick={signout}>
+              로그아웃
+            </Button>
+          </Grid>
+        </Grid>
+      </Toolbar>
+    </AppBar>
+  )
+  let todoListPage = (
+    <div>
+      {navigationBar}
       <Container maxWidth='md'>
         <AddTodo addItem={addItem} />
         <div className='TodoList'>{todoItems}</div>
       </Container>
     </div>
   )
+  let loadingPage = <h1> 로딩중... </h1>
+  let content = loadingPage
+  if (!loading) {
+    content = todoListPage
+  }
+
+  return <div className='App'>{content}</div>
 }
 
 export default App
