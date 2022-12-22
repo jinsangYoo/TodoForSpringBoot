@@ -17,9 +17,13 @@ import { call, signout } from './service/ApiService'
 
 function App() {
   const [items, setItems] = useState([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    call('/todo', 'GET').then((response) => setItems(response.data))
+    call('/todo', 'GET').then((response) => {
+      setItems(response.data)
+      setLoading(false)
+    })
   }, [])
 
   const addItem = (item) => {
@@ -31,6 +35,20 @@ function App() {
   const editItem = (item) => {
     call('/todo', 'PUT', item).then((response) => setItems(response.data))
   }
+  let todoItems = items.length > 0 && (
+    <Paper style={{ margin: 16 }}>
+      <List>
+        {items.map((item) => (
+          <Todo
+            item={item}
+            key={item.id}
+            deleteItem={deleteItem}
+            editItem={editItem}
+          />
+        ))}
+      </List>
+    </Paper>
+  )
   let navigationBar = (
     <AppBar position='static'>
       <Toolbar>
@@ -47,23 +65,8 @@ function App() {
       </Toolbar>
     </AppBar>
   )
-
-  let todoItems = items.length > 0 && (
-    <Paper style={{ margin: 16 }}>
-      <List>
-        {items.map((item) => (
-          <Todo
-            item={item}
-            key={item.id}
-            deleteItem={deleteItem}
-            editItem={editItem}
-          />
-        ))}
-      </List>
-    </Paper>
-  )
-  return (
-    <div className='App'>
+  let todoListPage = (
+    <div>
       {navigationBar}
       <Container maxWidth='md'>
         <AddTodo addItem={addItem} />
@@ -71,6 +74,13 @@ function App() {
       </Container>
     </div>
   )
+  let loadingPage = <h1> 로딩중... </h1>
+  let content = loadingPage
+  if (!loading) {
+    content = todoListPage
+  }
+
+  return <div className='App'>{content}</div>
 }
 
 export default App
